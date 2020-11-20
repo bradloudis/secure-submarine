@@ -18,9 +18,8 @@ router.get('/', rejectUnauthenticated, (req, res) => {
       // extracting the clearance level from the dbResponse to be used in next query
       const clearanceLevel = response.rows[0].clearance_level;
 
-      const queryText = `SELECT *
-      FROM "secret"
-      WHERE "secret".secrecy_level < $1
+      const queryText = `SELECT * FROM "secret"
+      WHERE "secret".secrecy_level <= $1
       ORDER BY id ASC;`;
 
       pool
