@@ -7,20 +7,15 @@ const router = express.Router();
 
 router.get('/', rejectUnauthenticated, (req, res) => {
   console.log('req.user:', req.user);
+  // selecting row of user table that matches id of the user that is logged in using req.user.id in the query below
   const queryUserRole = `SELECT * FROM "user" WHERE id=$1`;
   // GET route code here
-
-  // Sarah's query idea...
-  // SELECT *
-  // FROM "user"
-  // JOIN "secret" ON "user".clearance_level > "secret".secrecy_level
-  // WHERE "user".clearance_level >= "secret".secrecy_level
-  // ORDER BY username ASC;
 
   pool
     .query(queryUserRole, [req.user.id])
     .then((response) => {
       console.log('response', response);
+      // extracting the clearance level from the dbResponse to be used in next query
       const clearanceLevel = response.rows[0].clearance_level;
 
       const queryText = `SELECT *
